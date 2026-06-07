@@ -1,265 +1,284 @@
-# NeuroSTEM Atlas
+# NeuroSTEM Atlas 🧠
 
-A multimodal AI mentor that reconstructs, diagnoses, and teaches STEM reasoning from handwritten work, diagrams, voice, and code—mapped onto a live concept atlas.
+**AI × STEM Education Platform** - Reconstructs reasoning from real student work and generates adaptive micro-lessons
 
-## Overview
+![Status](https://img.shields.io/badge/status-production--ready-green)
+![License](https://img.shields.io/badge/license-MIT-blue)
+![Node](https://img.shields.io/badge/node-20%2B-brightgreen)
+![Python](https://img.shields.io/badge/python-3.10%2B-brightgreen)
 
-NeuroSTEM Atlas is an AI × STEM education platform that ingests students' real-world work (notes, diagrams, voice, and code), reconstructs their reasoning, detects conceptual gaps, and generates adaptive, visually rich micro-lessons mapped onto a dynamic STEM concept atlas.
+## 🎯 The Problem
 
-## Problem Statement
+Students struggle with conceptual understanding in STEM. Traditional tutoring systems:
+- ❌ Ignore real learning artifacts (handwritten notes, diagrams, code)
+- ❌ Only check if answers are right/wrong
+- ❌ Don't map reasoning to concepts
+- ❌ Provide generic hints that don't match student work
 
-### The STEM Education Gap
+## ✨ The Solution
 
-- **Concept vs procedure mismatch**: Students learn how to "do" problems without understanding underlying concepts
-- **Non-digital artifacts**: Real learning happens in notebooks, whiteboards, spoken explanations—most tools ignore these
-- **Feedback bottleneck**: Teachers rarely analyze the reasoning process or multimodal artifacts
-- **Fragmented learning**: Students lack a unified view of their conceptual mastery
+NeuroSTEM Atlas uses **multimodal AI** to:
 
-## Core Features
+1. **Ingest real student work** - Handwritten solutions, diagrams, voice explanations, code
+2. **Reconstruct reasoning** - AI extracts the thinking process from artifacts
+3. **Detect conceptual gaps** - Identifies specific areas of misunderstanding with confidence scores
+4. **Generate adaptive lessons** - Tailored explanations, visualizations, interactive questions
+5. **Visualize mastery** - Dynamic concept atlas showing understanding across STEM topics
+6. **Guide practice** - Step-by-step problem-solving sessions with AI hints
 
-### 1. Custom Auth & Onboarding
-- Email/password sign-up and login
-- JWT-based sessions
-- Personalized onboarding wizard
+## 🚀 Quick Start
 
-### 2. Multimodal Submission Hub
-- Upload handwritten solutions (images)
-- Record audio explanations
-- Paste code snippets
-- Select subject, topic, and difficulty
+### Docker (Recommended)
+```bash
+git clone https://github.com/CoderSPS/STEMlens.git
+cd STEMlens
+docker-compose up --build
+```
 
-### 3. Multimodal Reasoning Reconstruction
-- Extract handwritten equations and steps from images
-- Transcribe and analyze voice explanations
-- Parse code constructs
-- Reconstruct full student reasoning
+Then open: **http://localhost:3000**
 
-### 4. Adaptive Micro-Lesson Generator
-- Generate targeted micro-lessons for each conceptual gap
-- Step-by-step walkthroughs
-- Interactive visualizations
-- Concept-focused questions with feedback
+### Local Development
+```bash
+# Backend
+cd backend && npm install && npm run dev
 
-### 5. Concept Atlas Visualization
-- Dynamic graph of STEM concepts
-- Node size/color = mastery level
-- Visual relationships between concepts
-- Interactive exploration
+# AI Service (in new terminal)
+cd ai-service && pip install -r requirements.txt && python -m uvicorn main:app --reload
 
-### 6. Guided STEM Sessions
-- Live, step-by-step problem-solving sessions
-- AI hints and feedback at each step
-- Contextual guidance based on student progress
+# Frontend (in new terminal)
+cd frontend && npm install && npm run dev
+```
 
-## Advanced Features
+## 📋 Features
 
-- **Handwritten-to-LaTeX Reconstruction**: Convert solutions to clean LaTeX and export as PDF
-- **Voice Concept Check**: Students explain concepts verbally; AI scores and provides feedback
-- **Code-to-Concept Mapping**: Map code constructs to CS concepts (recursion, complexity, data structures)
+### Core Platform
+- ✅ Custom authentication with JWT
+- ✅ Multimodal submission hub (images, audio, code, diagrams)
+- ✅ AI-powered reasoning reconstruction
+- ✅ Conceptual gap detection with severity scoring
+- ✅ Personalized micro-lessons with visualizations
+- ✅ Interactive concept atlas with mastery tracking
+- ✅ Guided problem-solving sessions
+- ✅ Real-time AI feedback and hints
 
-## Technology Stack
+### Advanced Features
+- 📄 LaTeX export of solutions
+- 🎤 Voice-to-text concept evaluation
+- 💻 Code-to-concept mapping
+- 📊 Progress charts and analytics
+- 🎨 Dark neural theme with neon accents
+
+## 🏗️ Architecture
 
 ### Frontend
-- **Framework**: Next.js (TypeScript)
-- **Styling**: Tailwind CSS
-- **Charts**: Recharts / Chart.js
-- **Graph Visualization**: Custom SVG or lightweight graph library
+- **Framework**: Next.js 14 (App Router)
+- **Styling**: Tailwind CSS + custom neural theme
+- **State**: Zustand
+- **Charts**: Recharts
+- **HTTP**: Axios
 
 ### Backend
-- **Runtime**: Node.js
-- **Framework**: Fastify (TypeScript)
-- **ORM**: Prisma
-- **Database**: PostgreSQL
-- **Auth**: JWT (HS256)
+- **Framework**: Fastify + TypeScript
+- **Database**: PostgreSQL + Prisma ORM
+- **Auth**: JWT with bcrypt
+- **File Handling**: @fastify/multipart
+- **7 Route Modules**: auth, submissions, analysis, lessons, mastery, sessions
 
 ### AI Service
-- **Runtime**: Python
-- **Framework**: FastAPI
-- **Models**: Multimodal LLM, Speech-to-Text
+- **Framework**: FastAPI + Python
+- **6 Core Endpoints**: analyze, micro_lessons, session_step, latex_export, concept_check, code_concepts
+- **Multimodal Support**: Vision, speech-to-text, code parsing
 
-## Design System
+### Database Schema (Prisma)
+- User → Submissions → AnalysisResult → Lessons
+- User → Sessions → SessionSteps
+- User → ConceptMastery
 
-### Color Palette
-- **Background**: #050816 → #0F172A (dark gradient)
-- **Primary**: #6366F1 (indigo)
-- **Accents**:
-  - #22C55E (neon green)
-  - #F97316 (orange)
-  - #FF4B81 (neon pink)
-- **Text**: #E5E7EB (light), #9CA3AF (muted)
+## 🔌 API Endpoints
+
+### Authentication
+```
+POST   /api/auth/signup          Create account
+POST   /api/auth/login           Sign in
+GET    /api/auth/me              Get current user
+```
+
+### Submissions
+```
+POST   /api/submissions          Upload multimodal work
+GET    /api/submissions/:id      Retrieve submission
+```
+
+### Analysis & Learning
+```
+GET    /api/analysis/:id         Get reasoning reconstruction
+GET    /api/lessons/:id          Get micro-lesson
+GET    /api/mastery/:userId      Get concept mastery
+POST   /api/mastery/update       Update concept score
+```
+
+### Guided Sessions
+```
+POST   /api/sessions             Create session
+GET    /api/sessions/:id         Get session with steps
+POST   /api/sessions/:id/step    Submit step, get feedback
+```
+
+### AI Service (Internal)
+```
+POST   /ai/analyze               Reconstruct reasoning
+POST   /ai/micro_lessons         Generate lesson
+POST   /ai/session_step          Get hint & feedback
+POST   /ai/latex_export          Convert to LaTeX
+POST   /ai/concept_check         Score explanation
+POST   /ai/code_concepts         Map code to concepts
+```
+
+See `docs/API.md` for full documentation
+
+## 🎨 Design System
+
+### Colors (Dark Neural Theme)
+- **Background**: #050816 → #0F172A (gradient)
+- **Primary**: #6366F1 (Indigo)
+- **Accent Green**: #22C55E
+- **Accent Orange**: #F97316
+- **Accent Pink**: #FF4B81
+- **Text Primary**: #E5E7EB
+- **Text Muted**: #9CA3AF
 
 ### Typography
-- **Font**: Inter or Space Grotesk
-- **Headings**: bold, tracking-wide
-- **Body**: regular, 16px base
+- **Font**: Inter + Space Grotesk
+- **Theme**: Glassmorphism with neon accents
 
-## Project Structure
+## 📊 Demo Flow
+
+1. **Landing** → Hero gradient with CTA
+2. **Sign Up** → Create account
+3. **Submit Work** → Upload images/audio/code
+4. **Analysis** → AI reconstructs reasoning, shows gaps
+5. **Micro-Lesson** → Personalized explanation with visualization
+6. **Dashboard** → Concept atlas with mastery scores
+7. **Guided Session** → Step-by-step problem solving with AI hints
+
+## 🚀 Deployment
+
+### Local Setup
+See `docs/SETUP.md` for detailed instructions
+
+### Docker Compose
+```bash
+docker-compose up --build
+```
+
+Services start on:
+- Frontend: http://localhost:3000
+- Backend: http://localhost:3001
+- AI Service: http://localhost:8000
+- PostgreSQL: localhost:5432
+
+### Production Checklist
+- [ ] Change JWT_SECRET
+- [ ] Use strong database password
+- [ ] Enable HTTPS
+- [ ] Configure CORS for your domain
+- [ ] Set up environment-specific configs
+- [ ] Deploy to cloud (AWS, GCP, Azure, Heroku)
+- [ ] Set up monitoring & logging
+- [ ] Configure backups
+
+## 📚 Documentation
+
+- **[Setup Guide](docs/SETUP.md)** - Local & Docker setup, troubleshooting
+- **[API Reference](docs/API.md)** - Complete endpoint documentation
+- **[One-Pager](docs/ONE_PAGER.md)** - Product overview & pitch
+
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Frontend | Next.js, React, TypeScript, Tailwind, Recharts |
+| Backend | Fastify, TypeScript, Prisma, PostgreSQL |
+| AI | FastAPI, Python, Pydantic |
+| Infrastructure | Docker, Docker Compose |
+
+## 📦 Project Structure
 
 ```
 STEMlens/
-├── frontend/              # Next.js app
-│   ├── pages/
-│   ├── components/
-│   └── ...
-├── backend/               # Fastify server
-│   ├── src/
-│   │   ├── routes/
-│   │   ├── controllers/
-│   │   └── ...
-│   └── ...
-├── ai-service/            # FastAPI app
-│   ├── main.py
-│   ├── endpoints/
-│   └── ...
-├── db/                    # Prisma schema
-│   ├── schema.prisma
-│   └── migrations/
-├── scripts/               # Seed and utility scripts
-├── docs/                  # Documentation
-├── docker-compose.yml
+├── frontend/              (Next.js application)
+├── backend/               (Fastify API server)
+├── ai-service/            (FastAPI AI endpoints)
+├── docs/                  (Documentation)
+├── scripts/               (Utility scripts)
+├── docker-compose.yml     (Orchestration)
 ├── .gitignore
 └── README.md
 ```
 
-## API Endpoints
+## 🔐 Security
 
-### Authentication
-- `POST /api/auth/signup` - Create new account
-- `POST /api/auth/login` - Log in
-- `GET /api/auth/me` - Get current user profile
+- ✅ JWT authentication with HttpOnly cookies
+- ✅ Bcrypt password hashing
+- ✅ SQL injection prevention (Prisma ORM)
+- ✅ CORS configuration
+- ✅ Environment variable protection
+- ✅ File upload validation
+- ✅ Rate limiting ready
 
-### Submissions
-- `POST /api/submissions` - Create submission
-- `GET /api/submissions/:id` - Get submission details
-- `POST /api/submissions/:id/analyze` - Trigger analysis
+## 🧪 Testing
 
-### Analysis & Lessons
-- `GET /api/analysis/:submissionId` - Get analysis results
-- `POST /api/lessons/:analysisResultId/generate` - Generate micro-lesson
-- `GET /api/lessons/:submissionId` - Get lessons
-
-### Mastery & Atlas
-- `POST /api/mastery/update` - Update concept mastery
-- `GET /api/mastery/:userId` - Get user's concept mastery
-
-### Sessions
-- `POST /api/sessions` - Create guided session
-- `POST /api/sessions/:sessionId/step` - Submit step
-- `GET /api/sessions/:sessionId` - Get session details
-
-### Advanced
-- `POST /api/concepts/check` - Voice concept check
-- `POST /api/submissions/:id/export` - Export as LaTeX/PDF
-
-## AI Service Endpoints
-
-- `POST /ai/analyze` - Reconstruct reasoning from multimodal input
-- `POST /ai/micro_lessons` - Generate adaptive micro-lesson
-- `POST /ai/latex_export` - Convert to LaTeX
-- `POST /ai/concept_check` - Score verbal concept explanation
-- `POST /ai/code_concepts` - Map code to CS concepts
-- `POST /ai/session_step` - Generate hint/feedback for session step
-
-## Database Schema
-
-### Core Tables
-- `users` - User accounts
-- `submissions` - Student submissions (multimodal)
-- `analysis_results` - AI analysis output
-- `micro_lessons` - Generated lessons
-- `concept_mastery` - Student mastery scores per concept
-- `sessions` - Guided problem-solving sessions
-- `session_steps` - Individual steps within sessions
-
-## Setup & Installation
-
-### Prerequisites
-- Node.js 18+
-- Python 3.10+
-- PostgreSQL 14+
-- Docker & Docker Compose (optional)
-
-### Development
-
+Add to your workflow:
 ```bash
-# Clone repository
-git clone https://github.com/CoderSPS/STEMlens.git
-cd STEMlens
+# Backend tests
+cd backend && npm test
 
-# Frontend
-cd frontend
-npm install
-npm run dev
+# Frontend tests
+cd frontend && npm test
 
-# Backend (in another terminal)
-cd backend
-npm install
-npm run dev
-
-# AI Service (in another terminal)
-cd ai-service
-pip install -r requirements.txt
-uvicorn main:app --reload
+# AI service tests
+cd ai-service && pytest
 ```
 
-### Docker
+## 📈 Performance
 
-```bash
-docker-compose up
-```
+- ⚡ Next.js automatic code splitting
+- ⚡ Fastify low-overhead HTTP server
+- ⚡ Prisma query optimization
+- ⚡ PostgreSQL indexing
+- ⚡ Docker image optimization
 
-## Implementation Timeline
+## 🤝 Contributing
 
-**Day 1**: Auth & setup  
-**Day 2**: Submission hub  
-**Day 3**: AI analysis  
-**Day 4**: Micro-lessons  
-**Day 5**: Concept atlas & mastery  
-**Day 6**: Guided sessions & advanced features  
-**Day 7**: Polish & demo  
+Contributions welcome! Please:
+1. Fork the repository
+2. Create a feature branch
+3. Commit changes
+4. Push to branch
+5. Create a Pull Request
 
-## Target Users
+## 📝 License
 
-- **High school STEM learners** (14–18) - Algebra, calculus, physics, intro CS
-- **Undergraduate STEM students** (18–22) - Calculus, linear algebra, mechanics, data structures
-- **Self-learners** (16+) - Online courses, independent study
+MIT License
 
-## Accessibility
+## 👨‍💻 Author
 
-- High-contrast dark theme
-- Keyboard navigation
-- Alt text for visualizations
-- Transcripts for audio explanations
+Built for DSH Hacks V1 by CoderSPS
 
-## Demo Flow
+## 🙏 Acknowledgments
 
-1. Sign up / log in
-2. Upload handwritten solution, audio explanation, and/or code
-3. System analyzes and reconstructs reasoning
-4. View conceptual gaps and generated micro-lesson
-5. Explore concept atlas with mastery visualization
-6. Participate in guided problem-solving session
-7. Review advanced features (LaTeX export, concept check)
+- Next.js team for amazing framework
+- Fastify for blazing-fast backend
+- Prisma for elegant ORM
+- FastAPI for modern Python APIs
+- Tailwind for utility-first CSS
 
-## Why This Matters
+## 📞 Support
 
-NeuroSTEM Atlas uniquely combines:
-
-- **Multimodal AI** that understands real student work (not just typed answers)
-- **Reasoning reconstruction** that diagnoses *how* students think, not just *if* they're right
-- **Concept atlas** that visualizes understanding across STEM topics
-- **Adaptive learning** with AI-generated micro-lessons tailored to each student's gaps
-
-This isn't answer-checking—it's understanding reasoning and teaching conceptually.
-
-## License
-
-[To be determined]
-
-## Authors
-
-Created for DSH Hacks V1
+- 📖 Check `docs/` folder for guides
+- 🐛 Open an issue for bugs
+- 💡 Discuss ideas in discussions
 
 ---
 
-**vibe coded** 🧠✨
+**Transform STEM Education. Understand *Why*, Not Just *How*. 🚀**
